@@ -4,7 +4,7 @@
 #  Licensed under the MIT license.
 
 from abc import ABC, abstractmethod
-
+import os, sys
 import jsonlines
 import json
 import copy
@@ -84,7 +84,7 @@ class WoWConverter(Converter):
                     else:
                         text = text
                     history.append(text.strip())
-
+        os.makedirs("../data/wow", exist_ok = True)
         with jsonlines.open('../data/wow/wow_train.jsonl', mode='w') as writer:
             for i in examples:
                 writer.write(i)
@@ -173,6 +173,7 @@ class WoIConverter(Converter):
                             turn = i['text'].strip()
                         history.append(turn)
 
+            os.makedirs("../data/woi", exist_ok = True)
             with jsonlines.open(f'../data/woi/woi_{split}.jsonl', mode='w') as writer:
                 for i in examples:
                     if split == 'train':
@@ -210,6 +211,7 @@ class CoQAConverter(Converter):
 
             if split == 'dev':
                 split = 'valid'
+            os.makedirs("../data/coqa", exist_ok = True)
             with jsonlines.open(f'../data/coqa/coqa_{split}.jsonl', mode='w') as writer:
                 for i in examples:
                     if split == 'train':
@@ -265,10 +267,11 @@ class MultiWOZConverter(Converter):
 
             if split == 'val':
                 split = 'valid'
+            os.makedirs("../data/multiwoz/", exist_ok=True)
             with jsonlines.open(f'../data/multiwoz/multiwoz_{split}.jsonl', mode='w') as writer:
                 for i in examples:
                     if split == 'train':
-                        if random.random() < 0.006:
+                        if random.random() < 0.001:
                             writer.write(i)
                     else:
                         writer.write(i)
